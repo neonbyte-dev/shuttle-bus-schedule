@@ -27,12 +27,23 @@ import { setupTrafficMap, updateMapRoute } from './traffic-map.js';
 import { startWeatherPolling } from './weather.js';
 
 // ─── State ─────────────────────────────────────────────────────
-let currentRoute = localStorage.getItem('shuttle-route') || 'main';
+let currentDirection = localStorage.getItem('shuttle-direction') || 'home'; // 'home' = going home, 'out' = leaving home
+let currentRoute = localStorage.getItem('shuttle-route') || 'main';        // 'main' or 'short'
 let directOnly = localStorage.getItem('shuttle-direct') === 'true';
 let updateInterval = null;
 let lastMapRoute = null; // Track to avoid re-drawing map every second
 
+// Map direction + route to schedule key
+function getScheduleKey() {
+  if (currentDirection === 'home') {
+    return currentRoute === 'main' ? 'main' : 'short';
+  } else {
+    return currentRoute === 'main' ? 'mainReturn' : 'shortReturn';
+  }
+}
+
 // ─── DOM Elements ──────────────────────────────────────────────
+const directionButtons = document.querySelectorAll('.direction-btn');
 const routeButtons = document.querySelectorAll('.route-btn');
 const dayDateEl = document.getElementById('day-date');
 const dayTypeEl = document.getElementById('day-type');
@@ -49,6 +60,50 @@ const remainingCountEl = document.getElementById('remaining-count');
 const fullScheduleList = document.getElementById('full-schedule-list');
 const directFilterBtn = document.getElementById('direct-filter');
 
+// ─── Direction Toggle ──────────────────────────────────────────
+function updateRouteLabels() {
+  const mainIcon = document.getElementById('route-main-icon');
+  const mainLabel = document.getElementById('route-main-label');
+  const shortIcon = document.getElementById('route-short-icon');
+  const shortLabel = document.getElementById('route-short-label');
+
+  if (currentDirection === 'home') {
+    // Going home: departing FROM these places
+    mainIcon.textContent = '🏬';
+    mainLabel.textContent = 'New Town Plaza';
+    shortIcon.textContent = '🌇';
+    shortLabel.textContent = 'Sunshine City';
+  } else {
+    // Leaving home: going TO these places
+    mainIcon.textContent = '🏬';
+    mainLabel.textContent = 'To NTP';
+    shortIcon.textContent = '🌇';
+    shortLabel.textContent = 'To Sunshine City';
+  }
+}
+
+directionButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const dir = btn.dataset.direction;
+    if (dir === currentDirection) return;
+
+    currentDirection = dir;
+    localStorage.setItem('shuttle-direction', dir);
+
+    directionButtons.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    lastMapRoute = null; // Force map redraw
+    updateRouteLabels();
+    render();
+  });
+});
+
+// Set initial direction button
+directionButtons.forEach(btn => {
+  btn.classList.toggle('active', btn.dataset.direction === currentDirection);
+});
+
 // ─── Route Toggle ──────────────────────────────────────────────
 routeButtons.forEach(btn => {
   btn.addEventListener('click', () => {
@@ -58,11 +113,10 @@ routeButtons.forEach(btn => {
     currentRoute = route;
     localStorage.setItem('shuttle-route', route);
 
-    // Update active state
     routeButtons.forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
 
-    // Re-render
+    lastMapRoute = null; // Force map redraw
     render();
   });
 });
@@ -71,6 +125,8 @@ routeButtons.forEach(btn => {
 routeButtons.forEach(btn => {
   btn.classList.toggle('active', btn.dataset.route === currentRoute);
 });
+
+updateRouteLabels();
 
 // ─── Direct Only Filter ────────────────────────────────────────
 directFilterBtn.classList.toggle('active', directOnly);
@@ -104,25 +160,25 @@ function updateTimeDisplay() {
 }
 
 // ─── Annotation Helpers ────────────────────────────────────────
-function getDotClass(bus, routeKey) {
-  if (routeKey === 'main' && bus.viaSunshine) return 'dot-via';
-  if (routeKey === 'short' && bus.fromNTP) return 'dot-ntp';
+function getDotClass(bus) {
+  if (bus.viaSunshine) return 'dot-via';
+  if (bus.fromNTP) return 'dot-ntp';
   return 'dot-direct';
 }
 
-function getPillHTML(bus, routeKey) {
-  if (routeKey === 'main' && bus.viaSunshine) {
+function getPillHTML(bus) {
+  if (bus.viaSunshine) {
     return `<span class="pill pill-via"><span class="dot dot-via"></span>Via Sunshine City</span>`;
   }
-  if (routeKey === 'short' && bus.fromNTP) {
-    return `<span class="pill pill-ntp"><span class="dot dot-ntp"></span>From New Town Plaza</span>`;
+  if (bus.fromNTP) {
+    return `<span class="pill pill-ntp"><span class="dot dot-ntp"></span>Via NTP</span>`;
   }
   return `<span class="pill pill-direct"><span class="dot dot-direct"></span>Direct</span>`;
 }
 
-function getAnnotationText(bus, routeKey) {
-  if (routeKey === 'main' && bus.viaSunshine) return 'Via Sunshine City';
-  if (routeKey === 'short' && bus.fromNTP) return 'From NTP';
+function getAnnotationText(bus) {
+  if (bus.viaSunshine) return 'Via Sunshine City';
+  if (bus.fromNTP) return 'Via NTP';
   return 'Direct';
 }
 
@@ -130,7 +186,7 @@ function getAnnotationText(bus, routeKey) {
 // Shows how much time has passed between the previous bus and the next bus.
 // When the bar is full (100%), the next bus departs.
 function getProgressPercent(nextBus, routeKey) {
-  const schedule = SCHEDULES[currentRoute][getDayType()];
+  const schedule = SCHEDULES[getScheduleKey()][getDayType()];
   const now = getCurrentHKT();
   const nowSeconds = now.totalSeconds;
   const nextSeconds = timeToSeconds(nextBus.time);
@@ -157,10 +213,11 @@ function getProgressPercent(nextBus, routeKey) {
 
 // ─── Main Render ───────────────────────────────────────────────
 function render() {
-  const nextBuses = getNextBuses(currentRoute, 3, directOnly);
-  const remaining = getRemainingBuses(currentRoute, directOnly);
-  const totalToday = getTotalBusesToday(currentRoute, directOnly);
-  const routeInfo = getRouteInfo(currentRoute);
+  const scheduleKey = getScheduleKey();
+  const nextBuses = getNextBuses(scheduleKey, 3, directOnly);
+  const remaining = getRemainingBuses(scheduleKey, directOnly);
+  const totalToday = getTotalBusesToday(scheduleKey, directOnly);
+  const routeInfo = getRouteInfo(scheduleKey);
 
   updateTimeDisplay();
 
@@ -170,7 +227,7 @@ function render() {
     comingUpSection.style.display = 'none';
     lastBusWarning.style.display = 'none';
     noBusesSection.style.display = 'block';
-    firstBusTomorrowEl.textContent = `First bus tomorrow: ${getFirstBusTomorrow(currentRoute)}`;
+    firstBusTomorrowEl.textContent = `First bus tomorrow: ${getFirstBusTomorrow(scheduleKey)}`;
     renderFullSchedule(remaining, totalToday);
     return;
   }
@@ -190,8 +247,8 @@ function render() {
   const next = nextBuses[0];
   const progress = getProgressPercent(next, currentRoute);
 
-  const nextEta = getEstimatedArrival(next, currentRoute);
-  const nextTraffic = getTrafficAdjustment(next, currentRoute);
+  const nextEta = getEstimatedArrival(next, scheduleKey);
+  const nextTraffic = getTrafficAdjustment(next, scheduleKey);
   const trafficStatus = getTrafficStatus();
 
   // Calculate traffic-adjusted arrival
@@ -236,7 +293,7 @@ function render() {
     </div>
     <div class="hero-footer">
       <div class="hero-annotation">
-        ${getPillHTML(next, currentRoute)}
+        ${getPillHTML(next)}
       </div>
       <span class="hero-eta">${arrivalDisplay} <span class="hero-eta-duration">(${rideDuration})</span></span>
     </div>
@@ -244,18 +301,18 @@ function render() {
   `;
 
   // ── Update traffic map route (only when route changes, not every second) ──
-  const mapRouteKey = `${currentRoute}_${next.viaSunshine || false}`;
+  const mapRouteKey = `${scheduleKey}_${next.viaSunshine || false}`;
   if (mapRouteKey !== lastMapRoute) {
     lastMapRoute = mapRouteKey;
-    updateMapRoute(currentRoute, next.viaSunshine || false);
+    updateMapRoute(scheduleKey, next.viaSunshine || false);
   }
 
   // ── Coming up list ──
   if (nextBuses.length > 1) {
     comingUpSection.style.display = 'block';
     comingUpList.innerHTML = nextBuses.slice(1).map(bus => {
-      const eta = getEstimatedArrival(bus, currentRoute);
-      const traffic = getTrafficAdjustment(bus, currentRoute);
+      const eta = getEstimatedArrival(bus, scheduleKey);
+      const traffic = getTrafficAdjustment(bus, scheduleKey);
       let arrTime = eta.arrivalTime;
       if (traffic) {
         const [ah, am] = eta.arrivalTime.split(':').map(Number);
@@ -267,11 +324,11 @@ function render() {
       return `
       <div class="upcoming-item">
         <div class="upcoming-dot-col">
-          <span class="dot ${getDotClass(bus, currentRoute)}"></span>
+          <span class="dot ${getDotClass(bus)}"></span>
         </div>
         <div class="upcoming-info">
           <div class="upcoming-time">${bus.time}</div>
-          <div class="upcoming-annotation">${getAnnotationText(bus, currentRoute)} · Arrive ~${arrTime}</div>
+          <div class="upcoming-annotation">${getAnnotationText(bus)} · Arrive ~${arrTime}</div>
         </div>
         <span class="upcoming-countdown ${bus.urgency}">${bus.countdown}</span>
       </div>
@@ -286,7 +343,8 @@ function render() {
 }
 
 function renderFullSchedule(remaining, totalToday) {
-  const schedule = SCHEDULES[currentRoute][getDayType()];
+  const scheduleKey = getScheduleKey();
+  const schedule = SCHEDULES[scheduleKey][getDayType()];
   const now = getCurrentHKT();
   const nowSeconds = now.totalSeconds;
 
@@ -298,21 +356,11 @@ function renderFullSchedule(remaining, totalToday) {
     const secondsUntil = entrySeconds - nowSeconds;
     const isNext = !isPast && remaining.length > 0 && entry.time === remaining[0].time;
 
-    const dotClass = currentRoute === 'main' && entry.viaSunshine
-      ? 'dot-via'
-      : currentRoute === 'short' && entry.fromNTP
-      ? 'dot-ntp'
-      : 'dot-direct';
-
-    const isIndirect = (currentRoute === 'main' && entry.viaSunshine) ||
-                       (currentRoute === 'short' && entry.fromNTP);
+    const dotClass = getDotClass(entry);
+    const isIndirect = entry.viaSunshine || entry.fromNTP;
     const isFiltered = directOnly && isIndirect && !isPast;
-
-    const annotationText = currentRoute === 'main' && entry.viaSunshine
-      ? 'Via Sunshine City'
-      : currentRoute === 'short' && entry.fromNTP
-      ? 'From NTP'
-      : '';
+    const annotationText = getAnnotationText(entry);
+    const showAnnotation = isIndirect ? annotationText : '';
 
     const countdown = isPast
       ? ''
@@ -322,7 +370,7 @@ function renderFullSchedule(remaining, totalToday) {
       <div class="fs-item ${isPast ? 'past' : ''} ${isNext ? 'next' : ''} ${isFiltered ? 'filtered' : ''}">
         <span class="fs-time">${entry.time}</span>
         <span class="fs-dot"><span class="dot ${dotClass}"></span></span>
-        <span class="fs-annotation">${annotationText}</span>
+        <span class="fs-annotation">${showAnnotation}</span>
         <span class="fs-countdown">${countdown}</span>
       </div>
     `;

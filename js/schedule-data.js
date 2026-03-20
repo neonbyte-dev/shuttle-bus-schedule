@@ -7,6 +7,12 @@
 // SHORT ROUTE: Sunshine City → Symphony Bay
 //   (A) = Departs from New Town Plaza via Sunshine City (originates from NTP)
 //
+// MAIN ROUTE RETURN: Villa Rhapsody → New Town Plaza
+//   * = Via Sunshine City (longer route, ~25 min instead of ~17 min)
+//
+// SHORT ROUTE RETURN: Villa Rhapsody → Sunshine City
+//   (A) = Departs from Villa Concerto Via Sunshine City to NTP (continues past SC)
+//
 // Each entry: { time: "HH:MM", viaSunshine: true/false } or { time: "HH:MM", fromNTP: true/false }
 // Times are HKT (UTC+8), no daylight saving.
 
@@ -310,6 +316,312 @@ export const SCHEDULES = {
       { time: "23:15", fromNTP: true },    // (A)
     ],
   },
+
+  mainReturn: {
+    name: "Villa Rhapsody → New Town Plaza",
+    shortName: "To NTP",
+    departure: "Villa Rhapsody",
+    destination: "New Town Plaza",
+    routeLabel: "Main Route",
+
+    // ═══════════════════════════════════════════════════════════
+    // WEEKDAY: Mon–Fri (excluding public holidays)
+    // Expected count: 56
+    // * = Via Sunshine City (~25 min instead of ~17 min)
+    // PDF columns read left-to-right, top-to-bottom:
+    //   Col 1: *06:16–08:31  (12 entries)
+    //   Col 2: 08:46–12:21  (12 entries)
+    //   Col 3: 12:41–16:46  (12 entries)
+    //   Col 4: 17:01–19:46  (12 entries)
+    //   Col 5: 20:01–*22:41 (8 entries)
+    // ═══════════════════════════════════════════════════════════
+    weekday: [
+      // Column 1
+      { time: "06:16", viaSunshine: true },   // *
+      { time: "06:31", viaSunshine: true },   // *
+      { time: "06:41", viaSunshine: true },   // *
+      { time: "07:01", viaSunshine: false },
+      { time: "07:11", viaSunshine: false },
+      { time: "07:21", viaSunshine: false },
+      { time: "07:36", viaSunshine: false },
+      { time: "07:46", viaSunshine: false },
+      { time: "07:56", viaSunshine: false },
+      { time: "08:11", viaSunshine: false },
+      { time: "08:21", viaSunshine: false },
+      { time: "08:31", viaSunshine: false },
+      // Column 2
+      { time: "08:46", viaSunshine: false },
+      { time: "09:01", viaSunshine: false },
+      { time: "09:21", viaSunshine: false },
+      { time: "09:41", viaSunshine: false },
+      { time: "10:01", viaSunshine: false },
+      { time: "10:21", viaSunshine: false },
+      { time: "10:41", viaSunshine: false },
+      { time: "11:01", viaSunshine: false },
+      { time: "11:21", viaSunshine: false },
+      { time: "11:41", viaSunshine: false },
+      { time: "12:01", viaSunshine: false },
+      { time: "12:21", viaSunshine: false },
+      // Column 3
+      { time: "12:41", viaSunshine: false },
+      { time: "13:01", viaSunshine: false },
+      { time: "13:31", viaSunshine: false },
+      { time: "14:01", viaSunshine: true },   // *
+      { time: "14:31", viaSunshine: false },
+      { time: "15:01", viaSunshine: true },   // *
+      { time: "15:21", viaSunshine: false },
+      { time: "15:41", viaSunshine: false },
+      { time: "16:01", viaSunshine: false },
+      { time: "16:16", viaSunshine: false },
+      { time: "16:31", viaSunshine: false },
+      { time: "16:46", viaSunshine: false },
+      // Column 4
+      { time: "17:01", viaSunshine: false },
+      { time: "17:16", viaSunshine: false },
+      { time: "17:31", viaSunshine: false },
+      { time: "17:46", viaSunshine: false },
+      { time: "18:01", viaSunshine: false },
+      { time: "18:16", viaSunshine: false },
+      { time: "18:31", viaSunshine: false },
+      { time: "18:46", viaSunshine: false },
+      { time: "19:01", viaSunshine: false },
+      { time: "19:16", viaSunshine: false },
+      { time: "19:31", viaSunshine: false },
+      { time: "19:46", viaSunshine: false },
+      // Column 5
+      { time: "20:01", viaSunshine: false },
+      { time: "20:21", viaSunshine: true },   // *
+      { time: "20:41", viaSunshine: true },   // *
+      { time: "21:01", viaSunshine: true },   // *
+      { time: "21:21", viaSunshine: true },   // *
+      { time: "21:41", viaSunshine: true },   // *
+      { time: "22:11", viaSunshine: true },   // *
+      { time: "22:41", viaSunshine: true },   // *
+    ],
+
+    // ═══════════════════════════════════════════════════════════
+    // WEEKEND / PUBLIC HOLIDAYS
+    // Expected count: 54
+    // PDF columns read left-to-right, top-to-bottom:
+    //   Col 1: *06:16–09:21  (11 entries)
+    //   Col 2: 09:41–13:01  (11 entries)
+    //   Col 3: 13:21–16:31  (11 entries)
+    //   Col 4: 16:46–19:16  (11 entries)
+    //   Col 5: 19:31–*22:41 (10 entries)
+    // ═══════════════════════════════════════════════════════════
+    weekend: [
+      // Column 1
+      { time: "06:16", viaSunshine: true },   // *
+      { time: "06:36", viaSunshine: true },   // *
+      { time: "07:01", viaSunshine: false },
+      { time: "07:21", viaSunshine: false },
+      { time: "07:41", viaSunshine: false },
+      { time: "08:01", viaSunshine: false },
+      { time: "08:16", viaSunshine: false },
+      { time: "08:31", viaSunshine: false },
+      { time: "08:46", viaSunshine: false },
+      { time: "09:01", viaSunshine: false },
+      { time: "09:21", viaSunshine: false },
+      // Column 2
+      { time: "09:41", viaSunshine: false },
+      { time: "10:01", viaSunshine: false },
+      { time: "10:21", viaSunshine: false },
+      { time: "10:41", viaSunshine: false },
+      { time: "11:01", viaSunshine: false },
+      { time: "11:21", viaSunshine: false },
+      { time: "11:41", viaSunshine: false },
+      { time: "12:01", viaSunshine: false },
+      { time: "12:21", viaSunshine: false },
+      { time: "12:41", viaSunshine: false },
+      { time: "13:01", viaSunshine: false },
+      // Column 3
+      { time: "13:21", viaSunshine: false },
+      { time: "13:41", viaSunshine: false },
+      { time: "14:01", viaSunshine: false },
+      { time: "14:21", viaSunshine: false },
+      { time: "14:41", viaSunshine: false },
+      { time: "15:01", viaSunshine: false },
+      { time: "15:21", viaSunshine: false },
+      { time: "15:41", viaSunshine: false },
+      { time: "16:01", viaSunshine: false },
+      { time: "16:16", viaSunshine: false },
+      { time: "16:31", viaSunshine: false },
+      // Column 4
+      { time: "16:46", viaSunshine: false },
+      { time: "17:01", viaSunshine: false },
+      { time: "17:16", viaSunshine: false },
+      { time: "17:31", viaSunshine: false },
+      { time: "17:46", viaSunshine: false },
+      { time: "18:01", viaSunshine: false },
+      { time: "18:16", viaSunshine: false },
+      { time: "18:31", viaSunshine: false },
+      { time: "18:46", viaSunshine: false },
+      { time: "19:01", viaSunshine: false },
+      { time: "19:16", viaSunshine: false },
+      // Column 5
+      { time: "19:31", viaSunshine: false },
+      { time: "19:46", viaSunshine: false },
+      { time: "20:01", viaSunshine: false },
+      { time: "20:21", viaSunshine: false },
+      { time: "20:41", viaSunshine: true },   // *
+      { time: "21:01", viaSunshine: true },   // *
+      { time: "21:21", viaSunshine: true },   // *
+      { time: "21:41", viaSunshine: true },   // *
+      { time: "22:11", viaSunshine: true },   // *
+      { time: "22:41", viaSunshine: true },   // *
+    ],
+  },
+
+  shortReturn: {
+    name: "Villa Rhapsody → Sunshine City",
+    shortName: "To Sunshine City",
+    departure: "Villa Rhapsody",
+    destination: "Sunshine City",
+    routeLabel: "Short Route",
+
+    // ═══════════════════════════════════════════════════════════
+    // WEEKDAY: Mon–Fri (excluding public holidays)
+    // Expected count: 56
+    // (A) = Departs from Villa Concerto Via Sunshine City to NTP
+    //       (continues past Sunshine City to New Town Plaza)
+    // PDF columns read left-to-right, top-to-bottom:
+    //   Col 1: (A)06:16–08:20  (12 entries)
+    //   Col 2: 08:30–11:40  (12 entries)
+    //   Col 3: 12:00–15:40  (12 entries)
+    //   Col 4: 16:00–19:40  (12 entries)
+    //   Col 5: 20:00–(A)22:41 (8 entries)
+    // ═══════════════════════════════════════════════════════════
+    weekday: [
+      // Column 1
+      { time: "06:16", fromNTP: true },    // (A)
+      { time: "06:31", fromNTP: true },    // (A)
+      { time: "06:41", fromNTP: true },    // (A)
+      { time: "07:00", fromNTP: false },
+      { time: "07:15", fromNTP: false },
+      { time: "07:20", fromNTP: false },
+      { time: "07:30", fromNTP: false },
+      { time: "07:40", fromNTP: false },
+      { time: "07:50", fromNTP: false },
+      { time: "08:00", fromNTP: false },
+      { time: "08:10", fromNTP: false },
+      { time: "08:20", fromNTP: false },
+      // Column 2
+      { time: "08:30", fromNTP: false },
+      { time: "08:40", fromNTP: false },
+      { time: "08:50", fromNTP: false },
+      { time: "09:00", fromNTP: false },
+      { time: "09:20", fromNTP: false },
+      { time: "09:40", fromNTP: false },
+      { time: "10:00", fromNTP: false },
+      { time: "10:20", fromNTP: false },
+      { time: "10:40", fromNTP: false },
+      { time: "11:00", fromNTP: false },
+      { time: "11:20", fromNTP: false },
+      { time: "11:40", fromNTP: false },
+      // Column 3
+      { time: "12:00", fromNTP: false },
+      { time: "12:20", fromNTP: false },
+      { time: "12:40", fromNTP: false },
+      { time: "13:00", fromNTP: false },
+      { time: "13:20", fromNTP: false },
+      { time: "13:40", fromNTP: false },
+      { time: "14:01", fromNTP: true },    // (A)
+      { time: "14:20", fromNTP: false },
+      { time: "14:40", fromNTP: false },
+      { time: "15:01", fromNTP: true },    // (A)
+      { time: "15:20", fromNTP: false },
+      { time: "15:40", fromNTP: false },
+      // Column 4
+      { time: "16:00", fromNTP: false },
+      { time: "16:20", fromNTP: false },
+      { time: "16:40", fromNTP: false },
+      { time: "17:00", fromNTP: false },
+      { time: "17:20", fromNTP: false },
+      { time: "17:40", fromNTP: false },
+      { time: "18:00", fromNTP: false },
+      { time: "18:20", fromNTP: false },
+      { time: "18:40", fromNTP: false },
+      { time: "19:00", fromNTP: false },
+      { time: "19:20", fromNTP: false },
+      { time: "19:40", fromNTP: false },
+      // Column 5
+      { time: "20:00", fromNTP: false },
+      { time: "20:21", fromNTP: true },    // (A)
+      { time: "20:41", fromNTP: true },    // (A)
+      { time: "21:01", fromNTP: true },    // (A)
+      { time: "21:21", fromNTP: true },    // (A)
+      { time: "21:41", fromNTP: true },    // (A)
+      { time: "22:11", fromNTP: true },    // (A)
+      { time: "22:41", fromNTP: true },    // (A)
+    ],
+
+    // ═══════════════════════════════════════════════════════════
+    // WEEKEND / PUBLIC HOLIDAYS
+    // Expected count: 49
+    // PDF columns read left-to-right, top-to-bottom:
+    //   Col 1: (A)06:16–09:40  (11 entries)
+    //   Col 2: 10:00–13:20  (11 entries)
+    //   Col 3: 13:40–17:00  (11 entries)
+    //   Col 4: 17:20–(A)20:41 (11 entries)
+    //   Col 5: (A)21:01–(A)22:41 (5 entries)
+    // ═══════════════════════════════════════════════════════════
+    weekend: [
+      // Column 1
+      { time: "06:16", fromNTP: true },    // (A)
+      { time: "06:36", fromNTP: true },    // (A)
+      { time: "07:00", fromNTP: false },
+      { time: "07:20", fromNTP: false },
+      { time: "07:40", fromNTP: false },
+      { time: "08:00", fromNTP: false },
+      { time: "08:20", fromNTP: false },
+      { time: "08:40", fromNTP: false },
+      { time: "09:00", fromNTP: false },
+      { time: "09:20", fromNTP: false },
+      { time: "09:40", fromNTP: false },
+      // Column 2
+      { time: "10:00", fromNTP: false },
+      { time: "10:20", fromNTP: false },
+      { time: "10:40", fromNTP: false },
+      { time: "11:00", fromNTP: false },
+      { time: "11:20", fromNTP: false },
+      { time: "11:40", fromNTP: false },
+      { time: "12:00", fromNTP: false },
+      { time: "12:20", fromNTP: false },
+      { time: "12:40", fromNTP: false },
+      { time: "13:00", fromNTP: false },
+      { time: "13:20", fromNTP: false },
+      // Column 3
+      { time: "13:40", fromNTP: false },
+      { time: "14:00", fromNTP: false },
+      { time: "14:20", fromNTP: false },
+      { time: "14:40", fromNTP: false },
+      { time: "15:00", fromNTP: false },
+      { time: "15:20", fromNTP: false },
+      { time: "15:40", fromNTP: false },
+      { time: "16:00", fromNTP: false },
+      { time: "16:20", fromNTP: false },
+      { time: "16:40", fromNTP: false },
+      { time: "17:00", fromNTP: false },
+      // Column 4
+      { time: "17:20", fromNTP: false },
+      { time: "17:40", fromNTP: false },
+      { time: "18:00", fromNTP: false },
+      { time: "18:20", fromNTP: false },
+      { time: "18:40", fromNTP: false },
+      { time: "19:00", fromNTP: false },
+      { time: "19:20", fromNTP: false },
+      { time: "19:40", fromNTP: false },
+      { time: "20:00", fromNTP: false },
+      { time: "20:20", fromNTP: false },
+      { time: "20:41", fromNTP: true },    // (A)
+      // Column 5
+      { time: "21:01", fromNTP: true },    // (A)
+      { time: "21:21", fromNTP: true },    // (A)
+      { time: "21:41", fromNTP: true },    // (A)
+      { time: "22:11", fromNTP: true },    // (A)
+      { time: "22:41", fromNTP: true },    // (A)
+    ],
+  },
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -320,7 +632,7 @@ export const SCHEDULES = {
 function verify() {
   const checks = [];
 
-  // 1. Count checks
+  // 1. Count checks — outbound routes
   checks.push({
     name: "Main weekday count",
     expected: 55,
@@ -342,6 +654,28 @@ function verify() {
     actual: SCHEDULES.short.weekend.length,
   });
 
+  // Count checks — return routes
+  checks.push({
+    name: "Main Return weekday count",
+    expected: 56,
+    actual: SCHEDULES.mainReturn.weekday.length,
+  });
+  checks.push({
+    name: "Main Return weekend count",
+    expected: 54,
+    actual: SCHEDULES.mainReturn.weekend.length,
+  });
+  checks.push({
+    name: "Short Return weekday count",
+    expected: 56,
+    actual: SCHEDULES.shortReturn.weekday.length,
+  });
+  checks.push({
+    name: "Short Return weekend count",
+    expected: 49,
+    actual: SCHEDULES.shortReturn.weekend.length,
+  });
+
   // 2. Monotonicity checks (times must be ascending)
   function isAscending(entries, label) {
     for (let i = 1; i < entries.length; i++) {
@@ -361,8 +695,12 @@ function verify() {
   isAscending(SCHEDULES.main.weekend, "Main weekend");
   isAscending(SCHEDULES.short.weekday, "Short weekday");
   isAscending(SCHEDULES.short.weekend, "Short weekend");
+  isAscending(SCHEDULES.mainReturn.weekday, "Main Return weekday");
+  isAscending(SCHEDULES.mainReturn.weekend, "Main Return weekend");
+  isAscending(SCHEDULES.shortReturn.weekday, "Short Return weekday");
+  isAscending(SCHEDULES.shortReturn.weekend, "Short Return weekend");
 
-  // 3. Flag counts
+  // 3. Flag counts — outbound routes
   const mainWdVia = SCHEDULES.main.weekday.filter(e => e.viaSunshine).length;
   const mainWeVia = SCHEDULES.main.weekend.filter(e => e.viaSunshine).length;
   const shortWdNtp = SCHEDULES.short.weekday.filter(e => e.fromNTP).length;
@@ -376,6 +714,21 @@ function verify() {
   checks.push({ name: "Short weekday fromNTP count", expected: 11, actual: shortWdNtp });
   // Short weekend: (A)20:50, (A)21:15, (A)21:35, (A)21:55, (A)22:15, (A)22:45, (A)23:15 = 7
   checks.push({ name: "Short weekend fromNTP count", expected: 7, actual: shortWeNtp });
+
+  // Flag counts — return routes
+  const mainRetWdVia = SCHEDULES.mainReturn.weekday.filter(e => e.viaSunshine).length;
+  const mainRetWeVia = SCHEDULES.mainReturn.weekend.filter(e => e.viaSunshine).length;
+  const shortRetWdNtp = SCHEDULES.shortReturn.weekday.filter(e => e.fromNTP).length;
+  const shortRetWeNtp = SCHEDULES.shortReturn.weekend.filter(e => e.fromNTP).length;
+
+  // Main Return weekday: *06:16, *06:31, *06:41, *14:01, *15:01, *20:21, *20:41, *21:01, *21:21, *21:41, *22:11, *22:41 = 12
+  checks.push({ name: "Main Return weekday viaSunshine count", expected: 12, actual: mainRetWdVia });
+  // Main Return weekend: *06:16, *06:36, *20:41, *21:01, *21:21, *21:41, *22:11, *22:41 = 8
+  checks.push({ name: "Main Return weekend viaSunshine count", expected: 8, actual: mainRetWeVia });
+  // Short Return weekday: (A)06:16, (A)06:31, (A)06:41, (A)14:01, (A)15:01, (A)20:21, (A)20:41, (A)21:01, (A)21:21, (A)21:41, (A)22:11, (A)22:41 = 12
+  checks.push({ name: "Short Return weekday fromNTP count", expected: 12, actual: shortRetWdNtp });
+  // Short Return weekend: (A)06:16, (A)06:36, (A)20:41, (A)21:01, (A)21:21, (A)21:41, (A)22:11, (A)22:41 = 8
+  checks.push({ name: "Short Return weekend fromNTP count", expected: 8, actual: shortRetWeNtp });
 
   // Report results
   let allPassed = true;

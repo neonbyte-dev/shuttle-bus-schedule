@@ -149,29 +149,30 @@ export function getUrgencyLevel(totalSeconds) {
 // When live traffic is available (Google Routes API), these get
 // replaced by real-time estimates. See traffic.js.
 export const JOURNEY_TIMES = {
-  main: {
-    direct: 17,       // NTP → Symphony Bay (direct)
-    viaSunshine: 25,   // NTP → Sunshine City → Symphony Bay
-  },
-  short: {
-    direct: 7,         // Sunshine City → Symphony Bay
-    fromNTP: 7,        // Still 7 min — you board at Sunshine City regardless of where bus came from
-  },
+  // Going home (TO Symphony Bay)
+  main:       { direct: 17, viaSunshine: 25 },  // NTP → Symphony Bay
+  short:      { direct: 7,  fromNTP: 7 },       // Sunshine City → Symphony Bay (7 min regardless)
+  // Leaving home (FROM Symphony Bay)
+  mainReturn: { direct: 17, viaSunshine: 25 },   // Villa Rhapsody → NTP
+  shortReturn:{ direct: 7,  fromNTP: 7 },        // Villa Rhapsody → Sunshine City (7 min regardless)
 };
 
 /**
  * Get estimated arrival time for a bus entry
  * @param {Object} entry - { time, viaSunshine?, fromNTP? }
- * @param {"main"|"short"} routeKey
+ * @param {string} routeKey - main, short, mainReturn, shortReturn
  * @returns {{ arrivalTime: string, durationMin: number }}
  */
 export function getEstimatedArrival(entry, routeKey) {
+  const times = JOURNEY_TIMES[routeKey] || JOURNEY_TIMES.main;
   let durationMin;
 
-  if (routeKey === 'main') {
-    durationMin = entry.viaSunshine ? JOURNEY_TIMES.main.viaSunshine : JOURNEY_TIMES.main.direct;
+  if (entry.viaSunshine) {
+    durationMin = times.viaSunshine || times.direct;
+  } else if (entry.fromNTP) {
+    durationMin = times.fromNTP || times.direct;
   } else {
-    durationMin = entry.fromNTP ? JOURNEY_TIMES.short.fromNTP : JOURNEY_TIMES.short.direct;
+    durationMin = times.direct;
   }
 
   // Calculate arrival time
@@ -200,9 +201,7 @@ export function getTodaySchedule(routeKey) {
  * Check if a bus entry is "direct" (not via another stop)
  */
 function isDirect(entry, routeKey) {
-  if (routeKey === 'main') return !entry.viaSunshine;
-  if (routeKey === 'short') return !entry.fromNTP;
-  return true;
+  return !entry.viaSunshine && !entry.fromNTP;
 }
 
 /**

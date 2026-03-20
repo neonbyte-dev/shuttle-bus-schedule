@@ -81,68 +81,100 @@ body {
 
 /* ─── Header ────────────────────────────────────────────────── */
 .header {
-  background: linear-gradient(135deg, var(--primary-900) 0%, #1a2744 100%);
-  margin: 0 -16px;
-  padding: 24px 20px 20px;
-  border-radius: 0 0 24px 24px;
-  margin-bottom: 20px;
+  padding: 16px 0 12px;
 }
 
-.header-top {
+.header-row {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
+  align-items: flex-start;
+  justify-content: space-between;
 }
 
-.header-icon {
-  font-size: 2rem;
-  line-height: 1;
+.header-left {
+  flex: 1;
 }
 
 .header-title {
-  font-size: 1.35rem;
+  font-size: 1.3rem;
   font-weight: 800;
-  color: var(--text-inverse);
+  color: var(--text-primary);
   letter-spacing: -0.03em;
   line-height: 1.1;
-}
-
-.header-subtitle {
-  font-size: 0.8rem;
-  color: var(--primary-300);
-  font-weight: 500;
-  margin-top: 1px;
 }
 
 .header-meta {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.75rem;
-  color: var(--primary-300);
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
   font-weight: 500;
+  margin-top: 4px;
 }
 
 .header-dot {
   width: 3px;
   height: 3px;
   border-radius: 50%;
-  background: var(--primary-600);
+  background: var(--border);
+}
+
+.header-version {
+  font-size: 0.65rem;
+  color: var(--text-tertiary);
+  font-weight: 500;
+  padding: 2px 8px;
+  background: var(--border-light);
+  border-radius: var(--radius-full);
+  margin-top: 4px;
 }
 
 .day-type-badge {
-  background: rgba(59, 130, 246, 0.2);
-  color: var(--primary-400);
+  background: var(--primary-50);
+  color: var(--primary-500);
   padding: 2px 8px;
   border-radius: var(--radius-full);
   font-weight: 600;
-  font-size: 0.7rem;
+  font-size: 0.65rem;
 }
 
 .current-time {
   font-variant-numeric: tabular-nums;
-  color: var(--primary-400);
+}
+
+/* ─── Direction Toggle ──────────────────────────────────────── */
+.direction-toggle {
+  display: flex;
+  gap: 0;
+  background: var(--border-light);
+  border-radius: var(--radius-full);
+  padding: 3px;
+  margin-bottom: 12px;
+}
+
+.direction-btn {
+  flex: 1;
+  padding: 10px 12px;
+  border: none;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.direction-btn:active {
+  transform: scale(0.97);
+}
+
+.direction-btn.active {
+  background: var(--surface);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
 }
 
 /* ─── Weather Card ──────────────────────────────────────────── */

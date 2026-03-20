@@ -4,7 +4,7 @@
 // so we cache everything aggressively. When the app loads, it serves from cache
 // instantly. To push updates, bump the CACHE_VERSION number below.
 
-const CACHE_VERSION = 'shuttle-v4';
+const CACHE_VERSION = 'shuttle-v5';
 
 const ASSETS_TO_CACHE = [
   './',

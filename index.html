@@ -15,7 +15,7 @@
   <meta name="apple-mobile-web-app-title" content="Shuttle Bus">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 
-  <!-- Preload font for speed -->
+  <!-- Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -29,36 +29,45 @@
   <div class="app">
     <!-- Header -->
     <header class="header">
-      <div class="header-top">
-        <span class="header-icon">🚌</span>
-        <div>
+      <div class="header-row">
+        <div class="header-left">
           <h1 class="header-title">Symphony Bay</h1>
-          <p class="header-subtitle">Shuttle Bus Schedule</p>
+          <div class="header-meta">
+            <span id="day-date"></span>
+            <span class="header-dot"></span>
+            <span id="day-type" class="day-type-badge"></span>
+            <span class="header-dot"></span>
+            <span id="current-time" class="current-time"></span>
+          </div>
         </div>
-      </div>
-      <div class="header-meta">
-        <span id="day-date"></span>
-        <span class="header-dot"></span>
-        <span id="day-type" class="day-type-badge"></span>
-        <span class="header-dot"></span>
-        <span id="current-time" class="current-time"></span>
+        <div class="header-version">v1.0</div>
       </div>
     </header>
 
-    <!-- Weather -->
-    <div id="weather-card" class="weather-card" style="display: none;"></div>
+    <!-- Direction Toggle: Going Home / Leaving Home -->
+    <div class="direction-toggle" id="direction-toggle">
+      <button class="direction-btn active" data-direction="home">
+        🏠 Going Home
+      </button>
+      <button class="direction-btn" data-direction="out">
+        🚶 Leaving Home
+      </button>
+    </div>
 
     <!-- Route Toggle -->
     <div class="route-toggle">
       <button class="route-btn active" data-route="main">
-        <span class="route-btn-icon">🏬</span>
-        <span class="route-btn-label">New Town Plaza</span>
+        <span class="route-btn-icon" id="route-main-icon">🏬</span>
+        <span class="route-btn-label" id="route-main-label">New Town Plaza</span>
       </button>
       <button class="route-btn" data-route="short">
-        <span class="route-btn-icon">🌇</span>
-        <span class="route-btn-label">Sunshine City</span>
+        <span class="route-btn-icon" id="route-short-icon">🌇</span>
+        <span class="route-btn-label" id="route-short-label">Sunshine City</span>
       </button>
     </div>
+
+    <!-- Weather -->
+    <div id="weather-card" class="weather-card" style="display: none;"></div>
 
     <!-- Direct Only Filter -->
     <div class="filter-bar" id="filter-bar">
@@ -87,6 +96,13 @@
       </div>
     </div>
 
+    <!-- No More Buses -->
+    <div id="no-buses-section" class="no-buses" style="display: none;">
+      <div class="no-buses-icon">🌙</div>
+      <p class="no-buses-text">No more buses today</p>
+      <p class="no-buses-tomorrow" id="first-bus-tomorrow"></p>
+    </div>
+
     <!-- Traffic Map -->
     <div class="traffic-map-section" id="traffic-map-section">
       <div class="traffic-map-header">
@@ -96,13 +112,6 @@
       <div class="traffic-map-container">
         <div id="traffic-map" class="traffic-map"></div>
       </div>
-    </div>
-
-    <!-- No More Buses -->
-    <div id="no-buses-section" class="no-buses" style="display: none;">
-      <div class="no-buses-icon">🌙</div>
-      <p class="no-buses-text">No more buses today</p>
-      <p class="no-buses-tomorrow" id="first-bus-tomorrow"></p>
     </div>
 
     <!-- Full Schedule (expandable) -->
