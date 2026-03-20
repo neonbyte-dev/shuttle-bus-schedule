@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Shuttle Bus Schedule</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0f172a">
+
+  <!-- iOS PWA support -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Shuttle Bus">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+
+  <!-- Preload font for speed -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Google Maps JavaScript API (for traffic map) -->
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClaYayXrmTg4RuhJx0lxFblJHIgx31JwE&callback=initTrafficMap"></script>
+</head>
+<body>
+  <div class="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-top">
+        <span class="header-icon">🚌</span>
+        <div>
+          <h1 class="header-title">Symphony Bay</h1>
+          <p class="header-subtitle">Shuttle Bus Schedule</p>
+        </div>
+      </div>
+      <div class="header-meta">
+        <span id="day-date"></span>
+        <span class="header-dot"></span>
+        <span id="day-type" class="day-type-badge"></span>
+        <span class="header-dot"></span>
+        <span id="current-time" class="current-time"></span>
+      </div>
+    </header>
+
+    <!-- Route Toggle -->
+    <div class="route-toggle">
+      <button class="route-btn active" data-route="main">
+        <span class="route-btn-icon">🏬</span>
+        <span class="route-btn-label">New Town Plaza</span>
+      </button>
+      <button class="route-btn" data-route="short">
+        <span class="route-btn-icon">🌇</span>
+        <span class="route-btn-label">Sunshine City</span>
+      </button>
+    </div>
+
+    <!-- Direct Only Filter -->
+    <div class="filter-bar" id="filter-bar">
+      <button class="filter-btn" id="direct-filter">
+        <span class="filter-check" id="filter-check"></span>
+        <span>Direct only</span>
+        <span class="filter-hint">faster route</span>
+      </button>
+    </div>
+
+    <!-- Hero: Next Bus -->
+    <div id="next-bus-section">
+      <div class="hero-card" id="next-bus-card">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- Warning banner -->
+    <div id="last-bus-warning" class="last-bus-warning" style="display: none;"></div>
+
+    <!-- Coming Up -->
+    <div id="coming-up-section">
+      <h2 class="section-label">Coming Up</h2>
+      <div class="upcoming-list" id="coming-up-list">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- Traffic Map -->
+    <div class="traffic-map-section" id="traffic-map-section">
+      <div class="traffic-map-header">
+        <span class="traffic-map-label">Traffic Map</span>
+        <span class="traffic-map-status" id="traffic-map-status"></span>
+      </div>
+      <div class="traffic-map-container">
+        <div id="traffic-map" class="traffic-map"></div>
+      </div>
+    </div>
+
+    <!-- No More Buses -->
+    <div id="no-buses-section" class="no-buses" style="display: none;">
+      <div class="no-buses-icon">🌙</div>
+      <p class="no-buses-text">No more buses today</p>
+      <p class="no-buses-tomorrow" id="first-bus-tomorrow"></p>
+    </div>
+
+    <!-- Full Schedule (expandable) -->
+    <details class="full-schedule" id="full-schedule">
+      <summary class="full-schedule-summary">
+        <div class="full-schedule-summary-left">
+          <span class="full-schedule-label">Full Schedule</span>
+          <span class="full-schedule-count" id="remaining-count"></span>
+        </div>
+        <span class="full-schedule-chevron"></span>
+      </summary>
+      <div class="full-schedule-list" id="full-schedule-list">
+        <!-- Populated by JS -->
+      </div>
+    </details>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-legend">
+        <span class="legend-item">
+          <span class="legend-dot legend-dot-via"></span> Via Sunshine City
+        </span>
+        <span class="legend-item">
+          <span class="legend-dot legend-dot-ntp"></span> From NTP
+        </span>
+        <span class="legend-item">
+          <span class="legend-dot legend-dot-direct"></span> Direct
+        </span>
+      </div>
+      <p class="footer-meta">Schedule effective 21 Jan 2016</p>
+      <p class="footer-hotline">
+        Villa Concerto: 2633-1380 &middot; Villa Rhapsody: 2630-8300
+      </p>
+    </footer>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js')
+        .then(() => console.log('Service Worker registered'))
+        .catch(err => console.error('SW registration failed:', err));
+    }
+  </script>
+</body>
+</html>
