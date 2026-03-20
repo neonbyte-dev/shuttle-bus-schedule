@@ -29,6 +29,7 @@ import { setupTrafficMap, updateMapRoute } from './traffic-map.js';
 let currentRoute = localStorage.getItem('shuttle-route') || 'main';
 let directOnly = localStorage.getItem('shuttle-direct') === 'true';
 let updateInterval = null;
+let lastMapRoute = null; // Track to avoid re-drawing map every second
 
 // ─── DOM Elements ──────────────────────────────────────────────
 const routeButtons = document.querySelectorAll('.route-btn');
@@ -241,8 +242,12 @@ function render() {
     ${trafficBadge ? `<div class="hero-traffic">${trafficBadge}</div>` : ''}
   `;
 
-  // ── Update traffic map route ──
-  updateMapRoute(currentRoute, next.viaSunshine || false);
+  // ── Update traffic map route (only when route changes, not every second) ──
+  const mapRouteKey = `${currentRoute}_${next.viaSunshine || false}`;
+  if (mapRouteKey !== lastMapRoute) {
+    lastMapRoute = mapRouteKey;
+    updateMapRoute(currentRoute, next.viaSunshine || false);
+  }
 
   // ── Coming up list ──
   if (nextBuses.length > 1) {
