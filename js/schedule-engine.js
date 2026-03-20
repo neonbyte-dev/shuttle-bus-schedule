@@ -155,7 +155,7 @@ export const JOURNEY_TIMES = {
   },
   short: {
     direct: 7,         // Sunshine City → Symphony Bay
-    fromNTP: 25,       // NTP → Sunshine City → Symphony Bay (full journey from NTP)
+    fromNTP: 7,        // Still 7 min — you board at Sunshine City regardless of where bus came from
   },
 };
 

@@ -197,7 +197,8 @@ export function getTrafficAdjustment(entry, routeKey) {
   if (routeKey === 'main') {
     key = entry.viaSunshine ? 'main_via_sunshine' : 'main_direct';
   } else {
-    key = entry.fromNTP ? 'main_via_sunshine' : 'short_direct';
+    // Always use short_direct — user boards at Sunshine City regardless of where bus came from
+    key = 'short_direct';
   }
 
   const route = trafficData.routes[key];
