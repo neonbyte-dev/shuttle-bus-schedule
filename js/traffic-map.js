@@ -198,19 +198,23 @@ export function updateMapRoute(routeKey = 'main', viaSunshine = false) {
 }
 
 /**
- * Set up the map to auto-initialize when Google Maps API is ready
+ * Set up the map — poll for Google Maps API readiness then init.
+ * This avoids race conditions with the async script callback.
  */
 export function setupTrafficMap() {
-  // If Google Maps already loaded, init now
-  if (window._gmapsReady) {
-    setTimeout(initMap, 100);
+  function tryInit() {
+    if (window.google?.maps) {
+      initMap();
+    } else {
+      // Google Maps not loaded yet — retry in 500ms
+      setTimeout(tryInit, 500);
+    }
   }
-  // Otherwise the global callback will handle it
+  // Start trying after a short delay (let DOM render)
+  setTimeout(tryInit, 300);
 }
 
-// Global callback for Google Maps script load
+// Global callback — still set it as a fallback for the script tag
 window.initTrafficMap = function () {
-  window._gmapsReady = true;
-  // Auto-init the map immediately
-  setTimeout(initMap, 100);
+  // noop — setupTrafficMap handles init via polling
 };

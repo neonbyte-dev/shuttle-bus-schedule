@@ -171,14 +171,24 @@ function renderWeather() {
     warningHTML = `<div class="weather-warning">⚠️ ${activeWarnings.join(', ')}</div>`;
   }
 
-  // Rain alert
-  let rainHTML = '';
+  // Action recommendation based on conditions
+  let actionHTML = '';
   if (isRaining) {
-    rainHTML = `<span class="weather-rain rain-now">☔ Raining now</span>`;
+    actionHTML = `<div class="weather-action action-rain">☔ Bring umbrella & raincoat</div>`;
   } else if (needsUmbrella) {
-    rainHTML = `<span class="weather-rain rain-likely">🌂 Rain likely — bring umbrella</span>`;
+    actionHTML = `<div class="weather-action action-rain">🌂 Bring umbrella — rain expected</div>`;
   } else if (rainChance && rainChance !== 'Low') {
-    rainHTML = `<span class="weather-rain rain-possible">🌂 Rain: ${rainChance}</span>`;
+    actionHTML = `<div class="weather-action action-maybe">🌂 Pack umbrella just in case</div>`;
+  } else if (temp !== null && temp >= 33) {
+    actionHTML = `<div class="weather-action action-hot">🥵 Very hot — stay hydrated, bring water</div>`;
+  } else if (temp !== null && temp >= 30) {
+    actionHTML = `<div class="weather-action action-warm">☀️ Hot day — sunscreen & water</div>`;
+  } else if (temp !== null && temp <= 15) {
+    actionHTML = `<div class="weather-action action-cold">🧥 Bring a jacket — it's cold</div>`;
+  } else if (temp !== null && temp <= 20) {
+    actionHTML = `<div class="weather-action action-cool">🧥 Light jacket recommended</div>`;
+  } else {
+    actionHTML = `<div class="weather-action action-good">👍 Good conditions for commute</div>`;
   }
 
   el.innerHTML = `
@@ -189,7 +199,7 @@ function renderWeather() {
         <div class="weather-temp">${temp !== null ? temp + '°C' : '--'}</div>
         <div class="weather-desc">${description}${humidity ? ` · ${humidity}%` : ''}</div>
       </div>
-      ${rainHTML ? `<div class="weather-alert">${rainHTML}</div>` : ''}
     </div>
+    ${actionHTML}
   `;
 }

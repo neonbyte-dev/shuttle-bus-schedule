@@ -244,6 +244,40 @@ body {
   color: var(--text-secondary);
 }
 
+.weather-action {
+  margin-top: 10px;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.action-rain {
+  background: var(--primary-100);
+  color: var(--primary-500);
+}
+
+.action-hot, .action-warm {
+  background: var(--amber-bg);
+  color: #b45309;
+}
+
+.action-cold, .action-cool {
+  background: var(--primary-50);
+  color: var(--primary-500);
+}
+
+.action-good {
+  background: var(--green-bg);
+  color: var(--green);
+}
+
+.action-maybe {
+  background: var(--border-light);
+  color: var(--text-secondary);
+}
+
 .weather-warning {
   background: var(--red-bg);
   color: var(--red);
