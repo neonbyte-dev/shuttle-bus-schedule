@@ -194,10 +194,12 @@ export function getTrafficAdjustment(entry, routeKey) {
   if (!trafficData) return null;
 
   let key;
-  if (routeKey === 'main') {
+  const isMainRoute = routeKey === 'main' || routeKey === 'mainReturn';
+  const isShortRoute = routeKey === 'short' || routeKey === 'shortReturn';
+  if (isMainRoute) {
     key = entry.viaSunshine ? 'main_via_sunshine' : 'main_direct';
   } else {
-    // Always use short_direct — user boards at Sunshine City regardless of where bus came from
+    // Always use short_direct — user experience is SC↔Symphony Bay regardless
     key = 'short_direct';
   }
 
@@ -244,9 +246,12 @@ export function getTrafficStatus() {
  */
 export function getRoutePolyline(routeKey, viaSunshine) {
   if (!trafficData) return null;
-  const key = viaSunshine ? 'main_via_sunshine' :
-              routeKey === 'main' ? 'main_direct' : 'short_direct';
-  return trafficData.routes[key]?.polyline || null;
+  // Map all 4 route keys to the 3 traffic API routes
+  // Return routes use the same roads, just reversed (polyline is close enough)
+  const isMainRoute = routeKey === 'main' || routeKey === 'mainReturn';
+  if (viaSunshine) return trafficData.routes['main_via_sunshine']?.polyline || null;
+  if (isMainRoute) return trafficData.routes['main_direct']?.polyline || null;
+  return trafficData.routes['short_direct']?.polyline || null;
 }
 
 /**

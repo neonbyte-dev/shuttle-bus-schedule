@@ -393,25 +393,28 @@ body {
 }
 
 .hero-time {
-  font-size: 2.75rem;
+  font-size: 2.2rem;
   font-weight: 800;
   color: var(--text-primary);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.03em;
   line-height: 1;
+  flex-shrink: 0;
 }
 
 .hero-countdown-wrap {
   text-align: right;
+  flex-shrink: 0;
 }
 
 .hero-countdown {
-  font-size: 2rem;
+  font-size: 1.6rem;
   font-weight: 800;
   color: var(--primary-500);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
   line-height: 1;
+  white-space: nowrap;
 }
 
 .hero-countdown.warning {
@@ -974,11 +977,11 @@ body {
   }
 
   .hero-time {
-    font-size: 3.25rem;
+    font-size: 2.5rem;
   }
 
   .hero-countdown {
-    font-size: 2.5rem;
+    font-size: 1.8rem;
   }
 }
 

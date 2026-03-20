@@ -175,15 +175,19 @@ export function updateMapRoute(routeKey = 'main', viaSunshine = false) {
   }
 
   // Add simple pin markers at departure and arrival
-  if (routeKey === 'main') {
-    addMarker(STOPS.ntp, 'New Town Plaza');
+  const isMainRoute = routeKey === 'main' || routeKey === 'mainReturn';
+  const isReturn = routeKey === 'mainReturn' || routeKey === 'shortReturn';
+
+  if (isMainRoute) {
+    addMarker(isReturn ? STOPS.symphonyBay : STOPS.ntp, isReturn ? 'Symphony Bay' : 'New Town Plaza');
     if (viaSunshine) {
       addMarker(STOPS.sunshine, 'Sunshine City');
     }
+    addMarker(isReturn ? STOPS.ntp : STOPS.symphonyBay, isReturn ? 'New Town Plaza' : 'Symphony Bay');
   } else {
-    addMarker(STOPS.sunshine, 'Sunshine City');
+    addMarker(isReturn ? STOPS.symphonyBay : STOPS.sunshine, isReturn ? 'Symphony Bay' : 'Sunshine City');
+    addMarker(isReturn ? STOPS.sunshine : STOPS.symphonyBay, isReturn ? 'Sunshine City' : 'Symphony Bay');
   }
-  addMarker(STOPS.symphonyBay, 'Symphony Bay');
 
   // Update status text
   const statusEl = document.getElementById('traffic-map-status');
