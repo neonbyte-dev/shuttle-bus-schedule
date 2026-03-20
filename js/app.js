@@ -160,25 +160,26 @@ function updateTimeDisplay() {
 }
 
 // ─── Annotation Helpers ────────────────────────────────────────
+// For Sunshine City routes, everything is "direct" from user's perspective
 function getDotClass(bus) {
+  if (currentRoute === 'short') return 'dot-direct';
   if (bus.viaSunshine) return 'dot-via';
-  if (bus.fromNTP) return 'dot-ntp';
   return 'dot-direct';
 }
 
 function getPillHTML(bus) {
+  if (currentRoute === 'short') {
+    return `<span class="pill pill-direct"><span class="dot dot-direct"></span>Direct</span>`;
+  }
   if (bus.viaSunshine) {
     return `<span class="pill pill-via"><span class="dot dot-via"></span>Via Sunshine City</span>`;
-  }
-  if (bus.fromNTP) {
-    return `<span class="pill pill-ntp"><span class="dot dot-ntp"></span>Via NTP</span>`;
   }
   return `<span class="pill pill-direct"><span class="dot dot-direct"></span>Direct</span>`;
 }
 
 function getAnnotationText(bus) {
+  if (currentRoute === 'short') return 'Direct';
   if (bus.viaSunshine) return 'Via Sunshine City';
-  if (bus.fromNTP) return 'Via NTP';
   return 'Direct';
 }
 
@@ -220,6 +221,14 @@ function render() {
   const routeInfo = getRouteInfo(scheduleKey);
 
   updateTimeDisplay();
+
+  // ── Hide filter for Sunshine City routes (always direct) ──
+  const filterBar = document.getElementById('filter-bar');
+  if (currentRoute === 'short') {
+    filterBar.style.display = 'none';
+  } else {
+    filterBar.style.display = 'block';
+  }
 
   // ── No buses left ──
   if (nextBuses.length === 0) {
