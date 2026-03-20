@@ -24,6 +24,7 @@ import {
 import { SCHEDULES } from './schedule-data.js';
 import { startTrafficPolling, getTrafficAdjustment, getTrafficStatus } from './traffic.js';
 import { setupTrafficMap, updateMapRoute } from './traffic-map.js';
+import { startWeatherPolling } from './weather.js';
 
 // ─── State ─────────────────────────────────────────────────────
 let currentRoute = localStorage.getItem('shuttle-route') || 'main';
@@ -355,6 +356,7 @@ function startUpdating() {
 startUpdating();
 startTrafficPolling();
 setupTrafficMap();
+startWeatherPolling();
 
 // ─── Visibility API ────────────────────────────────────────────
 // When the user switches away and comes back, force a re-render
