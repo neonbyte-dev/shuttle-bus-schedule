@@ -4,7 +4,7 @@
 // so we cache everything aggressively. When the app loads, it serves from cache
 // instantly. To push updates, bump the CACHE_VERSION number below.
 
-const CACHE_VERSION = 'shuttle-v5';
+const CACHE_VERSION = 'shuttle-v6';
 
 const ASSETS_TO_CACHE = [
   './',
@@ -46,7 +46,18 @@ self.addEventListener('activate', (event) => {
 });
 
 // ─── Fetch: serve from cache, fall back to network ─────────────
+// Navigation requests (opening the app) always get index.html directly.
+// This prevents the iOS Safari bug where a cached redirect response
+// causes "Response served by service worker has redirections".
 self.addEventListener('fetch', (event) => {
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      caches.match('./index.html')
+        .then(cached => cached || fetch(event.request))
+    );
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request)
       .then(cachedResponse => {

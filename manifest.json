@@ -2,7 +2,7 @@
   "name": "Shuttle Bus Schedule — Symphony Bay",
   "short_name": "Shuttle Bus",
   "description": "Next shuttle bus from New Town Plaza or Sunshine City to Symphony Bay",
-  "start_url": "./index.html",
+  "start_url": ".",
   "display": "standalone",
   "background_color": "#f9fafb",
   "theme_color": "#1e40af",
