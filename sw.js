@@ -4,11 +4,10 @@
 // so we cache everything aggressively. When the app loads, it serves from cache
 // instantly. To push updates, bump the CACHE_VERSION number below.
 
-const CACHE_VERSION = 'shuttle-v6';
+const CACHE_VERSION = 'shuttle-v7';
 
 const ASSETS_TO_CACHE = [
   './',
-  './index.html',
   './css/style.css',
   './js/app.js',
   './js/schedule-data.js',
@@ -52,7 +51,7 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   if (event.request.mode === 'navigate') {
     event.respondWith(
-      caches.match('./index.html')
+      caches.match('./')
         .then(cached => cached || fetch(event.request))
     );
     return;
