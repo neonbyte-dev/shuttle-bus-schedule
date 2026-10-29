@@ -25,6 +25,7 @@ import { SCHEDULES } from './schedule-data.js';
 import { startTrafficPolling, getTrafficAdjustment, getTrafficStatus } from './traffic.js';
 import { setupTrafficMap, updateMapRoute } from './traffic-map.js';
 import { startWeatherPolling } from './weather.js';
+import { start580, refresh580 } from './citybus.js';
 
 // ─── State ─────────────────────────────────────────────────────
 let currentDirection = localStorage.getItem('shuttle-direction') || 'home'; // 'home' = going home, 'out' = leaving home
@@ -96,6 +97,7 @@ directionButtons.forEach(btn => {
     lastMapRoute = null; // Force map redraw
     updateRouteLabels();
     render();
+    refresh580();
   });
 });
 
@@ -414,6 +416,7 @@ startUpdating();
 startTrafficPolling();
 setupTrafficMap();
 startWeatherPolling();
+start580(() => currentDirection);
 
 // ─── Visibility API ────────────────────────────────────────────
 // When the user switches away and comes back, force a re-render

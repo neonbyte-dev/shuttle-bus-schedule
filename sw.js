@@ -4,7 +4,7 @@
 // so we cache everything aggressively. When the app loads, it serves from cache
 // instantly. To push updates, bump the CACHE_VERSION number below.
 
-const CACHE_VERSION = 'shuttle-v7';
+const CACHE_VERSION = 'shuttle-v8';
 
 const ASSETS_TO_CACHE = [
   './',
@@ -16,6 +16,7 @@ const ASSETS_TO_CACHE = [
   './js/traffic.js',
   './js/traffic-map.js',
   './js/weather.js',
+  './js/citybus.js',
   './manifest.json',
   './icons/icon-192.png',
   './icons/icon-512.png',
