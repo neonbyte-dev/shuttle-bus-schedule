@@ -4,7 +4,7 @@
 // so we cache everything aggressively. When the app loads, it serves from cache
 // instantly. To push updates, bump the CACHE_VERSION number below.
 
-const CACHE_VERSION = 'shuttle-v8';
+const CACHE_VERSION = 'shuttle-v9';
 
 const ASSETS_TO_CACHE = [
   './',
@@ -26,8 +26,10 @@ const ASSETS_TO_CACHE = [
 // ─── Install: cache all assets ─────────────────────────────────
 self.addEventListener('install', (event) => {
   event.waitUntil(
+    // cache: 'reload' skips the phone's ordinary web cache, so an update
+    // always stores the files actually on the server, not an old copy
     caches.open(CACHE_VERSION)
-      .then(cache => cache.addAll(ASSETS_TO_CACHE))
+      .then(cache => cache.addAll(ASSETS_TO_CACHE.map(url => new Request(url, { cache: 'reload' }))))
       .then(() => self.skipWaiting())
   );
 });
